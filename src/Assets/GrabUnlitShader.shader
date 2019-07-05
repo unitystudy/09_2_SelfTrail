@@ -6,13 +6,13 @@
     }
     SubShader
     {
-		Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
-		LOD 100
+	Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
+	LOD 100
 
-		Cull off// 両面描画
-		Blend SrcAlpha OneMinusSrcAlpha// 半透明合成式
+	Cull off// 両面描画
+	Blend SrcAlpha OneMinusSrcAlpha// 半透明合成式
 
-		GrabPass { "_BackgroundTexture" }
+	GrabPass { "_BackgroundTexture" }
 
         Pass
         {
@@ -33,13 +33,13 @@
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-				float4 grabPos : TEXCOORD1;
-				UNITY_FOG_COORDS(1)
+		float4 grabPos : TEXCOORD1;
+		UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
 
             sampler2D _MainTex;
-			sampler2D _BackgroundTexture;
+	    sampler2D _BackgroundTexture;
             float4 _MainTex_ST;
 
             v2f vert (appdata v)
@@ -49,7 +49,7 @@
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 UNITY_TRANSFER_FOG(o,o.vertex);
 
-				o.grabPos = ComputeGrabScreenPos(o.vertex);
+		o.grabPos = ComputeGrabScreenPos(o.vertex);
 
                 return o;
             }
@@ -59,12 +59,12 @@
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
 
-				fixed3 grab = tex2Dproj(_BackgroundTexture, i.grabPos
-					+ 100.0 // ずらす強さ
-					*  (col.a + 0.5) // αが0でも少しはゆがめる
-					* float4(ddx(i.uv.x), ddy(i.uv.x), 0.0, 0.0)// u座標の向きでずらす
-					).rgb;
-				col.rgb = grab;
+		fixed3 grab = tex2Dproj(_BackgroundTexture, i.grabPos
+			+ 100.0 // ずらす強さ
+			*  (col.a + 0.5) // αが0でも少しはゆがめる
+			* float4(ddx(i.uv.x), ddy(i.uv.x), 0.0, 0.0)// u座標の向きでずらす
+			).rgb;
+		col.rgb = grab;
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
